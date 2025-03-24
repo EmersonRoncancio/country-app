@@ -1,0 +1,12 @@
+<section class="flex gap-4 p-4">
+  <input
+    type="text"
+    [placeholder]="placeholder()"
+    class="input input-info"
+    (keyup)="capitalInput.value"
+    #capitalInput
+     />
+  <button
+    (click)="onChanceCapital(capitalInput.value)"
+    class="btn btn-primary">Buscar por ciudad</button>
+</section>
