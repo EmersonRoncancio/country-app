@@ -13,30 +13,25 @@
         </tr>
       </thead>
       <tbody>
-        <!-- row 1 -->
-        <tr>
 
-        </tr>
-        <!-- row 2 -->
-        <tr>
-
-        </tr>
-        <!-- row 3 -->
-        <tr>
-
-        </tr>
-        <!-- row 4 -->
-        <th>
-
-        </th>
-        <!-- row 5 -->
-        <th>
-
-        </th>
-        <!-- row 6 -->
-        <th>
-
-        </th>
+        @for (country of countryList(); track country.name; let i = $index) {
+          <!-- row 1 -->
+          <tr>
+            <th>{{i + 1}}</th>
+            <td> {{ country.flag }} </td>
+            <td> <img class="w-8" [src]="country.flags.png" [alt]="country.name"> </td>
+            <td>{{ country.name }}</td>
+            <td>{{ country.capital }}</td>
+            <td>
+              <span class="badge badge-primary">
+                {{ country.population | number }}
+              </span>
+            </td>
+            <td>
+              <a class="text-primary cursor-pointer" routerLink="">Ver</a>
+            </td>
+          </tr>
+        }
       </tbody>
     </table>
   </div>
