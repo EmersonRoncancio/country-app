@@ -1,4 +1,18 @@
 <input-search
-  (capitalSignal)="outputCapital($event)"
+  (capitalSignal)="countryList.set($event)"
   [placeholder]="placeholderSignal()"/>
-<!-- <table-list /> -->
+
+<table-list
+  [countryList]="conutryResource.value() ?? []"
+  [loading]="conutryResource.isLoading()"
+  [isError]="conutryResource.error()"
+/>
+
+<!-- @if(conutryResource.error()){
+  <p>{{conutryResource.error()}}</p>
+} @if(conutryResource.hasValue()){
+  <table-list [countryList]="conutryResource.value()!"/>
+} @if(conutryResource.isLoading()){
+  <p>Loading...</p>
+} -->
+

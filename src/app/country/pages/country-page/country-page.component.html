@@ -1,1 +1,17 @@
-<h3>{{country()}}</h3>
+@if(countryResource.isLoading()){
+  <section>
+    <div class="flex justify-center items-center h-screen">
+      <span class="loading loading-infinity loading-xl"></span>
+    </div>
+  </section>
+}
+
+@if(countryResource.error()){
+  <not-found />
+}
+
+@if (countryResource.hasValue()) {
+  <country-information [country]="countryResource.value()"/>
+  <p>{{countryResource.value().name}}</p>
+}
+

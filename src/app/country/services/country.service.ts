@@ -44,17 +44,34 @@ export class CountryService {
   searchByCountry(country: string){
     country = country.trim().toLowerCase();
 
-    return this.http.get<CapitalResponse[]>(`https://restcountries.com/v3.1/translation/${country}`)
+    return this.http.get<CapitalResponse[]>(`https://restcountries.com/v3.1/name/${country}`)
       .pipe(
         map((response) => {
           console.log(response)
-          return response
-        },
+          return CountryMapper.mapCountry(response)
+        }),
+        catchError((error) => {
+          console.log(error)
+          return throwError(() => new Error('Error en la petición'))
+        })
+
+    )
+  }
+
+  searchByAlphaCode(code: string){
+    code = code.trim().toLowerCase();
+
+    return this.http.get<CapitalResponse[]>(`https://restcountries.com/v3.1/alpha/${code}`)
+      .pipe(
+        map((response) => {
+          console.log(response)
+          return CountryMapper.mapCountry(response)
+        }),
+        map((data)=> data[0]),
         catchError((error) => {
           console.log(error)
           return throwError(() => new Error('Error en la petición'))
         })
       )
-    )
   }
 }

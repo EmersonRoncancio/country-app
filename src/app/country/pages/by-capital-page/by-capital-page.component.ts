@@ -1,9 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, resource, signal } from '@angular/core';
 import { InputSearchComponent } from "../../components/input-search/input-search.component";
 import { TableListComponent } from "../../components/table-list/table-list.component";
 import { CountryService } from '../../services/country.service';
 import { CountryMapperType } from '../../interfaces/country-mapper.interface';
 import { DecimalPipe } from '@angular/common';
+import { firstValueFrom, of } from 'rxjs';
+import { rxResource } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'by-capital-page',
@@ -15,29 +17,49 @@ export class ByCapitalPageComponent {
 
   placeholderSignal = signal<string>('Buscar por capital');
   countryService = inject(CountryService)
-  loading = signal<boolean>(false)
-  isError = signal<string | null>(null)
-  countryList = signal<CountryMapperType[]>([])
+  capital = signal('')
 
-  outputCapital( capital: string ) {
-    if(this.loading()) return
+  CapitalResource = rxResource({
+    request: () => ({capital: this.capital()}),
+    loader: ({request}) => {
+      if(!request.capital) return of([])
 
-    this.loading.set(true)
-    this.isError.set(null)
+      return this.countryService.searchByCapital(this.capital())
+    }
+  })
 
-    this.countryService.searchByCapital(capital)
-      .subscribe({
-        next: (response) => {
-          this.countryList.set(response)
-          this.loading.set(false)
-        },
-        error: (error) => {
-          console.log(error)
-          this.loading.set(false)
-          this.countryList.set([])
-          this.isError.set(error)
-        },
-      })
+  // CapitalResource = resource({
+  //   request: () => ({capital: this.capital()}),
+  //   loader: async({request}) => {
+  //     if(!request.capital) return []
 
-  }
+  //     return await firstValueFrom(this.countryService.searchByCapital(this.capital()))
+  //   }
+  // })
+
+
+  // loading = signal<boolean>(false)
+  // isError = signal<string | null>(null)
+  // countryList = signal<CountryMapperType[]>([])
+
+  // outputCapital( capital: string ) {
+  //   if(this.loading()) return
+
+  //   this.loading.set(true)
+  //   this.isError.set(null)
+
+  //   this.countryService.searchByCapital(capital)
+  //     .subscribe({
+  //       next: (response) => {
+  //         this.countryList.set(response)
+  //         this.loading.set(false)
+  //       },
+  //       error: (error) => {
+  //         console.log(error)
+  //         this.loading.set(false)
+  //         this.countryList.set([])
+  //         this.isError.set(error)
+  //       },
+  //     })
+  // }
 }

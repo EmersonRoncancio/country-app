@@ -28,7 +28,35 @@
               </span>
             </td>
             <td>
-              <a class="text-primary cursor-pointer" routerLink="">Ver</a>
+              <a class="text-primary cursor-pointer" [routerLink]="['/country/by/', country.code]">Ver</a>
+            </td>
+          </tr>
+        }
+
+        @if(loading()) {
+          <tr>
+            <td colspan="6" class="text-center">
+              <div class="flex justify-center items-center">
+                <svg class="animate-spin h-5 w-5 mr-3 text-primary" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"></svg>
+                Cargando...
+              </div>
+            </td>
+          </tr>
+        }
+
+       <!----------->
+
+       @if(isError()) {
+          <tr>
+            <td colspan="6" class="text-center">
+              <div class="">
+                <div>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M12 4a8 8 0 100 16 8 8 0 000-16z" />
+                  </svg>
+                  <span>{{ isError() }}</span>
+                </div>
+              </div>
             </td>
           </tr>
         }

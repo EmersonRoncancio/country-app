@@ -6,6 +6,7 @@ export class CountryMapper{
   static mapCountry(data: CapitalResponse[]): CountryMapperType[] {
     return data.map((country) => {
       return {
+        code: country.cca2,
         name: country.translations["spa"].common ?? country.name.common,
         capital: country.capital,
         area: country.area,

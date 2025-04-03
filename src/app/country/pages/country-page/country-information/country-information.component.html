@@ -1,0 +1,57 @@
+<section class="flex flex-col gap-4 justify-center items-center w-full">
+  <div class="overflow-x-auto w-[80%]">
+  <table class="table h-[60%]">
+    <!-- head -->
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Job</th>
+        <th>Favorite Color</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- row 1 -->
+      <tr>
+        <td>
+          <div class="flex items-center gap-3">
+            <div class="avatar">
+              <div class="mask mask-squircle h-12 w-12">
+                <img
+                  [src]="country().flags.png"
+                  [alt]="country().name" />
+              </div>
+            </div>
+            <div>
+              <div class="font-bold">{{country().name}}</div>
+              <div class="text-sm opacity-50">{{country().capital}}</div>
+            </div>
+          </div>
+        </td>
+        <td>
+          <span class="badge badge-primary">
+            {{country().population | number}}
+          </span>
+        </td>
+        <td>
+          {{country().area | number}}
+        </td>
+
+      </tr>
+      <!-- row 2 -->
+    </tbody>
+    <!-- foot -->
+  </table>
+</div>
+
+<figure class="diff aspect-16/9 w-[80%] h-[400px]" tabindex="0">
+  <div class="diff-item-1 opacity-35" role="img">
+    <img class="object-cover" [alt]="country().name" [src]="country().flags.png" />
+  </div>
+  <div class="diff-item-2" role="img" tabindex="0">
+    <img class="object-cover" [alt]="country().name" [src]="country().flags.png" />
+  </div>
+  <div class="diff-resizer"></div>
+</figure>
+</section>
+
