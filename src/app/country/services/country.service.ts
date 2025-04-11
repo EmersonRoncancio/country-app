@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
 import { CapitalResponse } from '../interfaces/country.interface';
 import { CountryMapper } from '../mappers/country.mapper';
 import { CountryMapperType } from '../interfaces/country-mapper.interface';
@@ -11,16 +11,27 @@ import { CountryMapperType } from '../interfaces/country-mapper.interface';
 export class CountryService {
 
   private http = inject(HttpClient);
+  private chancheCapital = new Map<string, CountryMapperType[]>();
+  private changeCountry = new Map<string, CountryMapperType[]>();
 
 
   searchByCapital(capital: string): Observable<CountryMapperType[]> {
 
+    if(this.chancheCapital.has(capital)){
+      console.log('Ya existe en el cache');
+      return of(this.chancheCapital.get(capital)!);
+    }
+
+    console.log('No existe en el cache');
     capital = capital.trim().toLowerCase();
 
     return this.http.get<CapitalResponse[]>(`https://restcountries.com/v3.1/capital/${capital}`)
       .pipe(
         map((response) => {
           return CountryMapper.mapCountry(response)
+        }),
+        tap((response) => {
+          this.chancheCapital.set(capital, response)
         }),
         catchError((err) => {
           console.log(err)
@@ -44,11 +55,21 @@ export class CountryService {
   searchByCountry(country: string){
     country = country.trim().toLowerCase();
 
+    if(this.changeCountry.has(country)){
+      console.log('Ya existe en el cache');
+      return of(this.changeCountry.get(country)!);
+    }
+
+    console.log('No existe en el cache');
+
     return this.http.get<CapitalResponse[]>(`https://restcountries.com/v3.1/name/${country}`)
       .pipe(
         map((response) => {
           console.log(response)
           return CountryMapper.mapCountry(response)
+        }),
+        tap((response) => {
+          this.changeCountry.set(country, response)
         }),
         catchError((error) => {
           console.log(error)
