@@ -1,0 +1,10 @@
+<div class="m-3 flex gap-2">
+  @for (regions of regions; track $index) {
+    <button
+      class="btn btn-outline"
+      (click)="selectedRegion(regions)"
+      [class.btn-primary]="regions === region()">
+      {{ regions }}
+    </button>
+  }
+</div>

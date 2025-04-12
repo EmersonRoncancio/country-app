@@ -13,6 +13,7 @@ export class CountryService {
   private http = inject(HttpClient);
   private chancheCapital = new Map<string, CountryMapperType[]>();
   private changeCountry = new Map<string, CountryMapperType[]>();
+  private changeRegion = new Map<string, CountryMapperType[]>();
 
 
   searchByCapital(capital: string): Observable<CountryMapperType[]> {
@@ -43,13 +44,28 @@ export class CountryService {
   searchByRegion(region: string){
     region = region.trim().toLowerCase();
 
-    return this.http.get(`https://restcountries.com/v3.1/region/${region}`)
+    if(this.changeRegion.has(region)){
+      console.log('Ya existe en el cache');
+      return of(this.changeRegion.get(region)!);
+    }
+
+    console.log('No existe en el cache');
+
+    return this.http.get<CapitalResponse[]>(`https://restcountries.com/v3.1/region/${region}`)
       .pipe(
         map((response) => {
-          console.log(response)
-          return response
-        })
+          return CountryMapper.mapCountry(response)
+        }),
+        tap((response) => {
+          this.changeRegion.set(region, response)
+        }
+      ),
+        catchError((error) => {
+          console.log(error)
+          return throwError(() => new Error('Error en la petición'))
+        }
       )
+    )
   }
 
   searchByCountry(country: string){

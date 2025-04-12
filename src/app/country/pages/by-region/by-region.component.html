@@ -1,1 +1,8 @@
-<!-- <table-list [countryList]=""/> -->
+
+<top-region (selectRegion)="preregions.set($event)" />
+
+<table-list
+  [countryList]="regionResource.value() ?? []"
+  [loading]="regionResource.isLoading()"
+  [isError]="regionResource.error()"
+/>
