@@ -1,6 +1,7 @@
 <input-search
   (capitalSignal)="countryList.set($event)"
-  [placeholder]="placeholderSignal()"/>
+  [placeholder]="placeholderSignal()"
+  [initialValue]="queryCountry()"/>
 
 <table-list
   [countryList]="conutryResource.value() ?? []"
