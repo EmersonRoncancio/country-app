@@ -1,6 +1,7 @@
 <input-search
   (capitalSignal)="capital.set($event)"
-  [placeholder]="placeholderSignal()"/>
+  [placeholder]="placeholderSignal()"
+  [initialValue]="queryCapital()"/>
 
   <table-list
   [countryList]="CapitalResource.value() ?? []"

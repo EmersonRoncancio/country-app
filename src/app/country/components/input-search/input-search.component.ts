@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input, linkedSignal, output, signal } from '@angular/core';
 
 @Component({
   selector: 'input-search',
@@ -9,15 +9,21 @@ import { ChangeDetectionStrategy, Component, effect, input, output, signal } fro
 export class InputSearchComponent {
   capitalSignal = output<string>()
   placeholder = input.required<string>()
-  inputValue = signal<string>('')
+  initialValue = input<string>('')
+  inputValue = linkedSignal<string>(() => this.initialValue() ?? '')
+
+
 
   debounceEffect = effect((onCleanup)=>{
     const value = this.inputValue()
 
     const timeout = setTimeout(()=>{
       this.capitalSignal.emit(value)
+
+      console.log('capitalSignal', value)
     }, 500)
 
+    console.log({value})
     onCleanup(()=>{
       clearTimeout(timeout)
     })

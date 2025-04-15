@@ -5,6 +5,7 @@
     class="input input-info"
     (keyup)="inputValue.set(capitalInput.value)"
     #capitalInput
+    [value]='initialValue()'
      />
   <button
     (click)="onChanceCapital(capitalInput.value)"

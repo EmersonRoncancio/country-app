@@ -1,11 +1,12 @@
-import { ChangeDetectionStrategy, Component, inject, resource, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, linkedSignal, resource, signal } from '@angular/core';
 import { InputSearchComponent } from "../../components/input-search/input-search.component";
 import { TableListComponent } from "../../components/table-list/table-list.component";
 import { CountryService } from '../../services/country.service';
 import { CountryMapperType } from '../../interfaces/country-mapper.interface';
 import { DecimalPipe } from '@angular/common';
-import { firstValueFrom, of } from 'rxjs';
-import { rxResource } from '@angular/core/rxjs-interop';
+import { firstValueFrom, map, of } from 'rxjs';
+import { rxResource, toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'by-capital-page',
@@ -17,14 +18,20 @@ export class ByCapitalPageComponent {
 
   placeholderSignal = signal<string>('Buscar por capital');
   countryService = inject(CountryService)
-  capital = signal('')
+  queryCapital = toSignal(
+    inject(ActivatedRoute).queryParams.pipe(
+      map(params => params['capital'] || ''))
+    )
+  capital = linkedSignal<string>(() => this.queryCapital())
+
 
   CapitalResource = rxResource({
     request: () => ({capital: this.capital()}),
     loader: ({request}) => {
+      console.log('request', request)
       if(!request.capital) return of([])
 
-      return this.countryService.searchByCapital(this.capital())
+      return this.countryService.searchByCapital(request.capital)
     }
   })
 
