@@ -6,7 +6,7 @@ import { CountryMapperType } from '../../interfaces/country-mapper.interface';
 import { DecimalPipe } from '@angular/common';
 import { firstValueFrom, map, of } from 'rxjs';
 import { rxResource, toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'by-capital-page',
@@ -23,13 +23,19 @@ export class ByCapitalPageComponent {
       map(params => params['capital'] || ''))
     )
   capital = linkedSignal<string>(() => this.queryCapital())
+  router = inject(Router)
 
 
   CapitalResource = rxResource({
     request: () => ({capital: this.capital()}),
     loader: ({request}) => {
-      console.log('request', request)
       if(!request.capital) return of([])
+
+        this.router.navigate(['/country/by-capital'], {
+          queryParams: {
+            capital: request.capital
+          }
+        })
 
       return this.countryService.searchByCapital(request.capital)
     }
